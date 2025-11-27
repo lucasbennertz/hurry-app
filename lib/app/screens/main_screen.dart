@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hurry_app/app/components/button_main_screen.dart';
 import 'package:hurry_app/app/utils/routes.dart';
 
+void navigateConfig(BuildContext context){
+  Navigator.of(context).pushNamed(Routes.configurationScreen);
+}
+
+void susto(BuildContext _){
+  print("Boo");
+}
+
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
@@ -16,8 +24,8 @@ class MainScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    ButtonMainScreen(buttonAction: navigateConfig,),
-                    ButtonMainScreen(buttonAction: susto,),
+                    ButtonMainScreen(buttonAction: navigateConfig),
+                    ButtonMainScreen(buttonAction: susto),
                   ],
                 )
               ],
@@ -25,11 +33,5 @@ class MainScreen extends StatelessWidget {
           ],
         ),
       );
-  }
-  void navigateConfig(BuildContext context){
-    Navigator.of(context).pushNamed(Routes.configurationScreen);
-  }
-  void susto(BuildContext _){
-    print("Boo");
   }
 }
