@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hurry_app/app/components/button_confirm_image.dart';
 import 'package:hurry_app/app/components/button_image_selector.dart';
 import 'package:hurry_app/app/utils/image_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,23 +34,45 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               "Selecione a tela de fundo:",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            ButtonImageSelector(
+            imagemSelecionada == null ? ButtonImageSelector(
               imageSelector: selecionarImagem,
+            ) : Container(),
+            SizedBox(
+              height: 16,
             ),
             FutureBuilder(
               future: imagemSelecionada,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                  return Image.file(File(snapshot.data!.path));
+                  return Column(
+                    children: [
+                      Image.file(File(snapshot.data!.path)),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ButtonConfirmImage(),
+                          ButtonImageSelector(
+                            imageSelector: selecionarImagem
+                          )
+                        ],
+                      )
+                    ],
+                  );
                 }
                 return Container();
               },
+            ),
+            SizedBox(
+              height: 16,
             )
           ],
         ),
