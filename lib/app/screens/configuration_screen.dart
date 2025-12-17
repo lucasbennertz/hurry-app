@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hurry_app/app/components/button_confirm_image.dart';
 import 'package:hurry_app/app/components/button_image_selector.dart';
@@ -14,66 +13,59 @@ class ConfigurationScreen extends StatefulWidget {
 }
 
 class _ConfigurationScreenState extends State<ConfigurationScreen> {
-  Future<XFile?>? imagemSelecionada;
-  
-  Future<XFile?> selecionarImagem() {
-    PegadorDeImagem pegador = PegadorDeImagem();
-    setState(() {
-      imagemSelecionada = pegador.pegarImagem();
-    });
-    return imagemSelecionada!;
+  File? _selectedImageFile;
+  final ImagePickerHelper _imagePicker = ImagePickerHelper();
+
+  Future<void> _pickImage() async {
+    final XFile? pickedFile = await _imagePicker.pickImage();
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImageFile = File(pickedFile.path);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Configuração"),
+        title: const Text("Settings"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Selecione a tela de fundo:",
+            const Text(
+              "Select background image:",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            imagemSelecionada == null ? ButtonImageSelector(
-              imageSelector: selecionarImagem,
-            ) : Container(),
-            SizedBox(
-              height: 16,
-            ),
-            FutureBuilder(
-              future: imagemSelecionada,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                  return Column(
+            const SizedBox(height: 16),
+            if (_selectedImageFile == null)
+              // Show the initial image selector button
+              ButtonImageSelector(
+                onPressed: _pickImage,
+                text: "Select Image",
+              )
+            else
+              // Show the selected image and confirmation buttons
+              Column(
+                children: [
+                  Image.file(_selectedImageFile!),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.file(File(snapshot.data!.path)),
-                      SizedBox(
-                        height: 16,
+                      ButtonConfirmImage(imagePath: _selectedImageFile!.path),
+                      ButtonImageSelector(
+                        onPressed: _pickImage,
+                        text: "Change Image",
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ButtonConfirmImage(),
-                          ButtonImageSelector(
-                            imageSelector: selecionarImagem
-                          )
-                        ],
-                      )
                     ],
-                  );
-                }
-                return Container();
-              },
-            ),
-            SizedBox(
-              height: 16,
-            )
+                  )
+                ],
+              ),
           ],
         ),
       ),
