@@ -11,8 +11,8 @@ void navigateConfig(BuildContext context) {
 }
 
 // Placeholder function for the second button
-void doNothing(BuildContext _) {
-  // This button does nothing for now
+void navigateHurry(BuildContext context) {
+  Navigator.of(context).pushNamed(Routes.hurryScreen);
 }
 
 class MainScreen extends StatelessWidget {
@@ -43,7 +43,7 @@ class MainScreen extends StatelessWidget {
               Row(
                 children: [
                   ButtonMainScreen(buttonAction: navigateConfig),
-                  ButtonMainScreen(buttonAction: doNothing),
+                  ButtonMainScreen(buttonAction: navigateHurry),
                 ],
               )
             ],
